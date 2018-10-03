@@ -11,11 +11,33 @@ import PlayerBar from './PlayerBar';
   this.state = {
    album: album,
    currentSong: album.songs[0],
+   currentTime: 0,
+   duration: album.songs[0].duration, 
    isPlaying: false
  };
   this.audioElement = document.createElement('audio');
  this.audioElement.src = album.songs[0].audioSrc;
 }
+
+componentDidMount() {
+ this.eventListeners = {
+  timeupdate: e => {
+    this.setState({ currentTime: this.audioElement.currentTime });
+  },
+  durationchange: e => {
+    this.setState({ duration: this.audioElement.duration });
+  }
+};
+this.audioElement.addEventListener('timeupdate', this.eventListeners.timeupdate);
+this.audioElement.addEventListener('durationchange', this.eventListeners.durationchange);
+}
+
+componentWillUnmount() {
+     this.audioElement.src = null;
+     this.audioElement.removeEventListener('timeupdate', this.eventListeners.timeupdate);
+     this.audioElement.removeEventListener('durationchange', this.eventListeners.durationchange);
+}
+
  play() {
  this.audioElement.play();
  this.setState({ isPlaying: true });
@@ -54,6 +76,12 @@ handleNextClick() {
  this.play(newSong);
 }
 
+handleTimeChange(e) {
+ const newTime = this.audioElement.duration * e.target.value;
+ this.audioElement.currentTime = newTime;
+ this.setState({ currentTime: newTime });
+}
+
   render() {
    return (
      <section className="album">
@@ -76,9 +104,9 @@ handleNextClick() {
          </colgroup>  
          <tbody>{this.state.album.songs.map((song, index) =>
            <tr  key={index} onClick={() => this.handleSongClick(song)}>
-             <td>{index + 1}
-                 <span className="ion-play"></span>
-                 <span className="ion-pause"></span>
+             <td><button>{index + 1}</button>
+                 <button><span className="ion-play"></span></button>
+                 <button><span className="ion-pause"></span></button>
              </td>
              <td>{song.title}</td>
              <td>{song.duration}</td>
@@ -89,9 +117,12 @@ handleNextClick() {
        <PlayerBar
            isPlaying={this.state.isPlaying}
            currentSong={this.state.currentSong}
+           currentTime={this.audioElement.currentTime}
+           duration={this.audioElement.duration}
            handleSongClick={() => this.handleSongClick(this.state.currentSong)}
            handlePrevClick={() => this.handlePrevClick()}
            handleNextClick={() => this.handleNextClick()}
+           handleTimeChange={(e) => this.handleTimeChange(e)}
          />
      </section>
    );
