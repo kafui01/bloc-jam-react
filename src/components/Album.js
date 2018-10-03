@@ -8,39 +8,11 @@ import PlayerBar from './PlayerBar';
    const album = albumData.find( album => {
    return album.slug === this.props.match.params.slug
  });
-<<<<<<< HEAD
-
- this.state = {
-=======
   this.state = {
->>>>>>> playerbarButton
    album: album,
    currentSong: album.songs[0],
    isPlaying: false
  };
-<<<<<<< HEAD
-
- this.audioElement = document.createElement('audio');
- this.audioElement.src = album.songs[0].audioSrc;
-}
-
-play() {
- this.audioElement.play();
- this.setState({ isPlaying: true });
-}
-
-pause() {
- this.audioElement.pause();
- this.setState({ isPlaying: false });
-}  
-
-setSong(song) {
- this.audioElement.src = song.audioSrc;
- this.setState({ currentSong: song });
-}
-
-handleSongClick(song) {
-=======
   this.audioElement = document.createElement('audio');
  this.audioElement.src = album.songs[0].audioSrc;
 }
@@ -57,7 +29,6 @@ handleSongClick(song) {
  this.setState({ currentSong: song });
 }
  handleSongClick(song) {
->>>>>>> playerbarButton
  const isSameSong = this.state.currentSong === song;
  if (this.state.isPlaying && isSameSong) {
   this.pause();
@@ -65,8 +36,6 @@ handleSongClick(song) {
   if (!isSameSong) { this.setSong(song); } 
   this.play();
 }
-<<<<<<< HEAD
-=======
 }
 
 handlePrevClick() {
@@ -75,7 +44,6 @@ handlePrevClick() {
       const newSong = this.state.album.songs[newIndex];
       this.setSong(newSong);
       this.play();
->>>>>>> playerbarButton
 }
 
   render() {
